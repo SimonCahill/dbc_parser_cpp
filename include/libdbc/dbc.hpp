@@ -8,6 +8,10 @@
 #include <string>
 #include <vector>
 
+#if __cplusplus >= 201703L
+	#include <filesystem>
+#endif // __cplusplus >= 201703L
+
 namespace Libdbc {
 
 class Parser {
@@ -34,6 +38,13 @@ public:
 	Message::ParseSignalsStatus parse_message(uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) const;
 
 	const std::vector<std::string>& unused_lines() const;
+
+	#if __cplusplus >= 201703L
+	static bool is_valid_dbc_file(const std::filesystem::path&);
+	#else
+	static bool is_valid_dbc_file(const std::string&);
+	#endif // __cplusplus >= 201703L
+	static bool is_valid_dbc_file(std::istream& stream);
 
 private:
 	std::string version{};
