@@ -8,21 +8,11 @@
 namespace Utils {
 
 std::istream& StreamHandler::get_line(std::istream& stream, std::string& line) {
-	std::string newline;
-
-	std::getline(stream, newline);
-
-	// Windows CRLF (\r\n)
-	if (!newline.empty() && newline[newline.size() - 1] == '\r') {
-		line = newline.substr(0, newline.size() - 1);
-		// MacOS LF (\r)
-	} else if (!newline.empty() && newline[newline.size()] == '\r') {
-		line = newline.replace(newline.size(), 1, "\n");
-	} else {
-		line = newline;
-	}
-
-	return stream;
+	std::getline(stream, line);
+    if (!line.empty() && line.back() == '\r') {
+        line.pop_back(); // strip CR from CRLF
+    }
+    return stream;
 }
 
 std::istream& StreamHandler::get_next_non_blank_line(std::istream& stream, std::string& line) {
