@@ -37,6 +37,15 @@ public:
 	static std::istream& skip_to_next_blank_line(std::istream& stream, std::string& line);
 };
 
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
 #if __cplusplus >= 201703
 #	if __cpp_concepts >= 201907
 	template<procsys_stringable T>
@@ -54,6 +63,16 @@ std::string		trim(const T& value) {
 	return trimmedValue;
 }
 
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @param trimChars The characters to trim from the string.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
 #if __cplusplus >= 201703
 #	if __cpp_concepts >= 201907
 	template<procsys_stringable T>
@@ -71,6 +90,16 @@ std::string  	trim(const T& value, const std::initializer_list<char>& trimChars)
 	return trimmedValue;
 }
 
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @param trimChars The characters to trim from the string.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
 #if __cplusplus >= 201703L
 #	if __cpp_concepts >= 201907
 	template<procsys_stringable T>
@@ -89,6 +118,8 @@ constexpr auto  trim(const T& value, const std::string_view& trimChars) { return
  * 
  * @return true If the string is empty or consists only of whitespace.
  * @return false Otherwise.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
  */
 template<typename T>
 constexpr bool  isWhitespaceOrEmpty(const T& str) {
