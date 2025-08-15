@@ -19,6 +19,7 @@ struct Message {
 		ErrorBigEndian,
 		ErrorUnknownID,
 		ErrorInvalidConversion,
+		ErrorInvalidSignalSize,
 	};
 
 	ParseSignalsStatus parse_signals(const std::vector<uint8_t>& data, std::vector<double>& values) const;
