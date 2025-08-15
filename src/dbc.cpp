@@ -93,7 +93,7 @@ void DbcParser::parse_file(const std::string& file_name) {
 		throw NonDbcFileFormatError(file_name, extension);
 	}
 
-	std::ifstream stream(file_name.c_str());
+	std::ifstream stream(file_name);
 
 	parse_file(stream);
 }
