@@ -41,7 +41,8 @@ maybe not this one either\n\
 \n\
 Someone wrote something....\n\
    b\n\
-end";
+end\
+";
 
 	std::istringstream stream(test_string);
 
