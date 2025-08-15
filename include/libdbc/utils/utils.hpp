@@ -91,25 +91,6 @@ std::string  	trim(const T& value, const std::initializer_list<char>& trimChars)
 }
 
 /**
- * @brief Trims the specified characters from the beginning and end of the given string.
- * 
- * @tparam T The typeparam; must be stringable.
- * @param value The string to trim.
- * @param trimChars The characters to trim from the string.
- * @return A new string with the specified characters trimmed.
- * 
- * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
- */
-#if __cplusplus >= 201703L
-#	if __cpp_concepts >= 201907
-	template<procsys_stringable T>
-#	else
-	template<typename T>
-#	endif // __cpp_concepts >= 201907
-constexpr auto  trim(const T& value, const std::string_view& trimChars) { return trim(value, std::initializer_list<char>(trimChars.begin(), trimChars.end())); }
-#endif // __cplusplus >= 201703L
-
-/**
  * @brief Checks if the given string is empty or contains only whitespace characters.
  * 
  * @tparam T The typeparam; must be stringable.
