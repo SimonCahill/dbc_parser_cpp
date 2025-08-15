@@ -2,6 +2,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -9,6 +10,12 @@
 #if __cplusplus >= 201703L
 #	include <string_view>
 #endif // __cplusplus >= 201703L
+
+#if __cpp_concepts >= 201907
+#include <concepts>
+template<typename Str>
+concept procsys_stringable = requires(Str s) { { s.data() + s.size() } -> std::convertible_to<const char*>; };
+#endif // __cpp_concepts >= 201907
 
 namespace Utils {
 
@@ -31,7 +38,11 @@ public:
 };
 
 #if __cplusplus >= 201703
-template<typename T>
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
 constexpr auto  trim(const T& value) {
 #else
 template<typename T>
@@ -43,18 +54,12 @@ std::string		trim(const T& value) {
 	return trimmedValue;
 }
 
-#if __cplusplus >= 201703L
-template<typename T>
-constexpr auto  trim(const T& value, const std::string_view& trimChars) {
-	T trimmedValue = value;
-	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [&trimChars](int ch) { return trimChars.find(static_cast<char>(ch)) == std::string_view::npos; }));
-	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [&trimChars](int ch) { return trimChars.find(static_cast<char>(ch)) == std::string_view::npos; }).base(), trimmedValue.end());
-	return trimmedValue;
-}
-#endif // __cplusplus >= 201703L
-
 #if __cplusplus >= 201703
-template<typename T>
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
 constexpr auto  trim(const T& value, std::initializer_list<char>& trimChars) {
 #else
 template<typename T>
@@ -65,6 +70,15 @@ std::string  	trim(const T& value, std::initializer_list<char>& trimChars) {
 	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }).base(), trimmedValue.end());
 	return trimmedValue;
 }
+
+#if __cplusplus >= 201703L
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
+constexpr auto  trim(const T& value, const std::string_view& trimChars) { return trim(value, std::initializer_list<char>(trimChars.begin(), trimChars.end())); }
+#endif // __cplusplus >= 201703L
 
 class String {
 public:
