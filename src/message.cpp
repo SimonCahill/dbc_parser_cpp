@@ -92,7 +92,7 @@ void Message::append_signal(const Signal& signal) {
 	m_signals.push_back(signal);
 }
 
-std::vector<Signal> Message::get_signals() const {
+const std::vector<Signal>& Message::get_signals() const {
 	return m_signals;
 }
 
