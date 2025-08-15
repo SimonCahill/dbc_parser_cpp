@@ -70,6 +70,32 @@ DbcParser::DbcParser()
 			  + whiteSpace + receiverPattern) {
 }
 
+#if __cplusplus >= 201703L
+bool DbcParser::is_valid_dbc_file(const std::filesystem::path& file_path) {
+#else
+bool DbcParser::is_valid_dbc_file(const std::string& file_path) {
+#endif // __cplusplus >= 201703L
+
+	std::ifstream testStream{file_path};
+	if (!testStream.is_open()) { return false; }
+
+	return is_valid_dbc_file(testStream);
+}
+
+bool DbcParser::is_valid_dbc_file(std::istream& stream) {
+	stream.seekg(0, std::ios::beg);
+
+	try {
+		DbcParser parser{};
+		parser.parse_dbc_header(stream);
+	} catch (const Exception& e) {
+		// If the file is missing the version, it is not a valid DBC file
+		return false;
+	}
+
+	return true;
+}
+
 void DbcParser::parse_file(std::istream& stream) {
 	std::string line;
 	std::vector<std::string> lines;
@@ -88,12 +114,11 @@ void DbcParser::parse_file(std::istream& stream) {
 }
 
 void DbcParser::parse_file(const std::string& file_name) {
-	auto extension = get_extension(file_name);
-	if (extension != ".dbc") {
-		throw NonDbcFileFormatError(file_name, extension);
+	if (!is_valid_dbc_file(file_name)) {
+		throw NonDbcFileFormatError(file_name, get_extension(file_name));
 	}
 
-	std::ifstream stream(file_name.c_str());
+	std::ifstream stream(file_name);
 
 	parse_file(stream);
 }
@@ -107,19 +132,19 @@ std::string DbcParser::get_extension(const std::string& file_name) {
 	return "";
 }
 
-std::string DbcParser::get_version() const {
+const std::string& DbcParser::get_version() const {
 	return version;
 }
 
-std::vector<std::string> DbcParser::get_nodes() const {
+const std::vector<std::string>& DbcParser::get_nodes() const {
 	return nodes;
 }
 
-std::vector<Libdbc::Message> DbcParser::get_messages() const {
+const std::vector<Libdbc::Message>& DbcParser::get_messages() const {
 	return messages;
 }
 
-Message::ParseSignalsStatus DbcParser::parse_message(const uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) {
+Message::ParseSignalsStatus DbcParser::parse_message(const uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) const {
 	for (const auto& message : messages) {
 		if (message.id() == message_id) {
 			return message.parse_signals(data, out_values);
@@ -246,7 +271,7 @@ void DbcParser::parse_dbc_messages(const std::vector<std::string>& lines) {
 	}
 }
 
-std::vector<std::string> DbcParser::unused_lines() const {
+const std::vector<std::string>& DbcParser::unused_lines() const {
 	return missed_lines;
 }
 

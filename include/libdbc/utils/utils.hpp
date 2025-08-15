@@ -2,9 +2,20 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
+
+#if __cplusplus >= 201703L
+#	include <string_view>
+#endif // __cplusplus >= 201703L
+
+#if __cpp_concepts >= 201907
+#include <concepts>
+template<typename Str>
+concept procsys_stringable = requires(Str s) { { s.data() + s.size() } -> std::convertible_to<const char*>; };
+#endif // __cpp_concepts >= 201907
 
 namespace Utils {
 
@@ -26,9 +37,98 @@ public:
 	static std::istream& skip_to_next_blank_line(std::istream& stream, std::string& line);
 };
 
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
+#if __cplusplus >= 201703
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
+constexpr auto  trim(const T& value) {
+#else
+template<typename T>
+std::string		trim(const T& value) {
+#endif // #if __cplusplus >= 201703
+	T trimmedValue = value;
+	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [](int ch) { return !std::isspace(ch); }));
+	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [](int ch) { return !std::isspace(ch); }).base(), trimmedValue.end());
+	return trimmedValue;
+}
+
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @param trimChars The characters to trim from the string.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
+#if __cplusplus >= 201703
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
+constexpr auto  trim(const T& value, std::initializer_list<char>& trimChars) {
+#else
+template<typename T>
+std::string  	trim(const T& value, const std::initializer_list<char>& trimChars) {
+#endif // __cplusplus >= 201703
+	T trimmedValue = value;
+	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }));
+	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }).base(), trimmedValue.end());
+	return trimmedValue;
+}
+
+/**
+ * @brief Trims the specified characters from the beginning and end of the given string.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * @param value The string to trim.
+ * @param trimChars The characters to trim from the string.
+ * @return A new string with the specified characters trimmed.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
+#if __cplusplus >= 201703L
+#	if __cpp_concepts >= 201907
+	template<procsys_stringable T>
+#	else
+	template<typename T>
+#	endif // __cpp_concepts >= 201907
+constexpr auto  trim(const T& value, const std::string_view& trimChars) { return trim(value, std::initializer_list<char>(trimChars.begin(), trimChars.end())); }
+#endif // __cplusplus >= 201703L
+
+/**
+ * @brief Checks if the given string is empty or contains only whitespace characters.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * 
+ * @param str The string to check against.
+ * 
+ * @return true If the string is empty or consists only of whitespace.
+ * @return false Otherwise.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
+template<typename T>
+constexpr bool  isWhitespaceOrEmpty(const T& str) {
+	return std::all_of(str.begin(), str.end(), [](char c) { return std::isspace(c); });
+}
+
 class String {
 public:
-	static std::string trim(const std::string& line);
+	static std::string trim(const std::string& line) { return Utils::trim(line); }
 
 	template<class Container>
 	static void split(const std::string& str, Container& cont, char delim = ' ') {
