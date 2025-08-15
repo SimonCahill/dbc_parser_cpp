@@ -119,7 +119,7 @@ const std::vector<Libdbc::Message>& DbcParser::get_messages() const {
 	return messages;
 }
 
-Message::ParseSignalsStatus DbcParser::parse_message(const uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) {
+Message::ParseSignalsStatus DbcParser::parse_message(const uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) const {
 	for (const auto& message : messages) {
 		if (message.id() == message_id) {
 			return message.parse_signals(data, out_values);

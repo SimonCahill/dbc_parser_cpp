@@ -31,7 +31,7 @@ public:
 	const std::vector<std::string>& get_nodes() const;
 	const std::vector<Libdbc::Message>& get_messages() const;
 
-	Message::ParseSignalsStatus parse_message(uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values);
+	Message::ParseSignalsStatus parse_message(uint32_t message_id, const std::vector<uint8_t>& data, std::vector<double>& out_values) const;
 
 	const std::vector<std::string>& unused_lines() const;
 
