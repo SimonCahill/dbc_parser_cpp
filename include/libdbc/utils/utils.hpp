@@ -126,6 +126,30 @@ constexpr bool  isWhitespaceOrEmpty(const T& str) {
 	return std::all_of(str.begin(), str.end(), [](char c) { return std::isspace(c); });
 }
 
+/**
+ * @brief Swaps the endianness of a multi-byte value.
+ * 
+ * @tparam T The type of the value.
+ * @param value The value to swap.
+ * @return T The value with swapped endianness.
+ * 
+ * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
+ */
+template<typename T>
+T                swapEndianness(T value) {
+	T swappedBytes;
+
+	char* valuePtr = reinterpret_cast<char*>(&value);
+	char* swappedPtr = reinterpret_cast<char*>(&swappedBytes);
+
+	auto sizeInBytes = sizeof(T);
+	for (size_t i = 0; i < sizeInBytes; i++) {
+		swappedPtr[sizeInBytes - 1 - i] = valuePtr[i];
+	}
+
+	return swappedBytes;
+}
+
 class String {
 public:
 	static std::string trim(const std::string& line) { return Utils::trim(line); }

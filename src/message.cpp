@@ -1,5 +1,3 @@
-#include <arpa/inet.h>
-
 #include <cstddef>
 #include <cstdint>
 #include <libdbc/message.hpp>
@@ -7,6 +5,8 @@
 #include <ostream>
 #include <string>
 #include <vector>
+
+#include <libdbc/utils/utils.hpp>
 
 namespace Libdbc {
 
@@ -39,7 +39,7 @@ Message::ParseSignalsStatus Message::parse_signals(const std::vector<uint8_t>& d
 	for (std::size_t i = 0; i < size; i++) {
 		data_big_endian = (data_big_endian << ONE_BYTE) | (uint64_t)data[i];
 	}
-	data_little_endian = ntohl(data_little_endian);
+	data_little_endian = Utils::swapEndianness(data_little_endian);
 
 	// TODO: does this also work on a big endian machine?
 
