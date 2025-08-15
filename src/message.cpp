@@ -37,19 +37,15 @@ Message::ParseSignalsStatus Message::parse_signals(const std::vector<uint8_t>& d
 	uint64_t data_little_endian = 0;
 	uint64_t data_big_endian = 0;
 	for (std::size_t i = 0; i < size; i++) {
+		data_little_endian |= ((uint64_t)data[i]) << i * ONE_BYTE;
 		data_big_endian = (data_big_endian << ONE_BYTE) | (uint64_t)data[i];
 	}
-	data_little_endian = Utils::swapEndianness(data_little_endian);
 
 	// TODO: does this also work on a big endian machine?
 
 	const auto len = size * 8;
 	uint64_t value = 0;
 	for (const auto& signal : m_signals) {
-
-		if (signal.size > len) {
-			return ParseSignalsStatus::ErrorInvalidSignalSize;
-		}
 
 		if (signal.is_bigendian) {
 			uint32_t start_bit = ONE_BYTE * (signal.start_bit / ONE_BYTE) + (SEVEN_BITS - (signal.start_bit % ONE_BYTE)); // Calculation taken from python CAN
