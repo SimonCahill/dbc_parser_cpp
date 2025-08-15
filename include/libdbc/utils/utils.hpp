@@ -6,6 +6,10 @@
 #include <sstream>
 #include <string>
 
+#if __cplusplus >= 201703L
+#	include <string_view>
+#endif // __cplusplus >= 201703L
+
 namespace Utils {
 
 class StreamHandler {
@@ -26,9 +30,45 @@ public:
 	static std::istream& skip_to_next_blank_line(std::istream& stream, std::string& line);
 };
 
+#if __cplusplus >= 201703
+template<typename T>
+constexpr auto  trim(const T& value) {
+#else
+template<typename T>
+std::string		trim(const T& value) {
+#endif // #if __cplusplus >= 201703
+	T trimmedValue = value;
+	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [](int ch) { return !std::isspace(ch); }));
+	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [](int ch) { return !std::isspace(ch); }).base(), trimmedValue.end());
+	return trimmedValue;
+}
+
+#if __cplusplus >= 201703L
+template<typename T>
+constexpr auto  trim(const T& value, const std::string_view& trimChars) {
+	T trimmedValue = value;
+	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [&trimChars](int ch) { return trimChars.find(static_cast<char>(ch)) == std::string_view::npos; }));
+	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [&trimChars](int ch) { return trimChars.find(static_cast<char>(ch)) == std::string_view::npos; }).base(), trimmedValue.end());
+	return trimmedValue;
+}
+#endif // __cplusplus >= 201703L
+
+#if __cplusplus >= 201703
+template<typename T>
+constexpr auto  trim(const T& value, std::initializer_list<char>& trimChars) {
+#else
+template<typename T>
+std::string  	trim(const T& value, std::initializer_list<char>& trimChars) {
+#endif // __cplusplus >= 201703
+	T trimmedValue = value;
+	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }));
+	trimmedValue.erase(std::find_if(trimmedValue.rbegin(), trimmedValue.rend(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }).base(), trimmedValue.end());
+	return trimmedValue;
+}
+
 class String {
 public:
-	static std::string trim(const std::string& line);
+	static std::string trim(const std::string& line) { return Utils::trim(line); }
 
 	template<class Container>
 	static void split(const std::string& str, Container& cont, char delim = ' ') {
