@@ -107,15 +107,15 @@ std::string DbcParser::get_extension(const std::string& file_name) {
 	return "";
 }
 
-std::string DbcParser::get_version() const {
+const std::string& DbcParser::get_version() const {
 	return version;
 }
 
-std::vector<std::string> DbcParser::get_nodes() const {
+const std::vector<std::string>& DbcParser::get_nodes() const {
 	return nodes;
 }
 
-std::vector<Libdbc::Message> DbcParser::get_messages() const {
+const std::vector<Libdbc::Message>& DbcParser::get_messages() const {
 	return messages;
 }
 
@@ -246,7 +246,7 @@ void DbcParser::parse_dbc_messages(const std::vector<std::string>& lines) {
 	}
 }
 
-std::vector<std::string> DbcParser::unused_lines() const {
+const std::vector<std::string>& DbcParser::unused_lines() const {
 	return missed_lines;
 }
 
