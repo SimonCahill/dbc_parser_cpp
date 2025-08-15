@@ -63,7 +63,7 @@ std::string		trim(const T& value) {
 constexpr auto  trim(const T& value, std::initializer_list<char>& trimChars) {
 #else
 template<typename T>
-std::string  	trim(const T& value, std::initializer_list<char>& trimChars) {
+std::string  	trim(const T& value, const std::initializer_list<char>& trimChars) {
 #endif // __cplusplus >= 201703
 	T trimmedValue = value;
 	trimmedValue.erase(trimmedValue.begin(), std::find_if(trimmedValue.begin(), trimmedValue.end(), [&trimChars](int ch) { return std::find(trimChars.begin(), trimChars.end(), static_cast<char>(ch)) == trimChars.end(); }));
@@ -79,6 +79,21 @@ std::string  	trim(const T& value, std::initializer_list<char>& trimChars) {
 #	endif // __cpp_concepts >= 201907
 constexpr auto  trim(const T& value, const std::string_view& trimChars) { return trim(value, std::initializer_list<char>(trimChars.begin(), trimChars.end())); }
 #endif // __cplusplus >= 201703L
+
+/**
+ * @brief Checks if the given string is empty or contains only whitespace characters.
+ * 
+ * @tparam T The typeparam; must be stringable.
+ * 
+ * @param str The string to check against.
+ * 
+ * @return true If the string is empty or consists only of whitespace.
+ * @return false Otherwise.
+ */
+template<typename T>
+constexpr bool  isWhitespaceOrEmpty(const T& str) {
+	return std::all_of(str.begin(), str.end(), [](char c) { return std::isspace(c); });
+}
 
 class String {
 public:
