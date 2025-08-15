@@ -65,13 +65,6 @@ std::istream& StreamHandler::skip_to_next_blank_line(std::istream& stream, std::
 	return stream;
 }
 
-std::string String::trim(const std::string& line) {
-	const char* WhiteSpace = " \t\v\r\n";
-	std::size_t start = line.find_first_not_of(WhiteSpace);
-	std::size_t end = line.find_last_not_of(WhiteSpace);
-	return start == end ? std::string() : line.substr(start, end - start + 1);
-}
-
 double String::convert_to_double(const std::string& value, double default_value) {
 	double converted_value = default_value;
 	// NOLINTNEXTLINE -- Trying to iterators on the value causes the test to infinitly hang on windows builds
