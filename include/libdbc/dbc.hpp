@@ -40,11 +40,11 @@ public:
 	const std::vector<std::string>& unused_lines() const;
 
 	#if __cplusplus >= 201703L
-	static bool is_valid_dbc_file(const std::filesystem::path&);
+	static void validate_dbc_file(const std::filesystem::path&);
 	#else
-	static bool is_valid_dbc_file(const std::string&);
+	static void validate_dbc_file(const std::string&);
 	#endif // __cplusplus >= 201703L
-	static bool is_valid_dbc_file(std::istream& stream);
+	static void validate_dbc_file(std::istream& stream);
 
 private:
 	std::string version{};
