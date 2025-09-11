@@ -5,7 +5,7 @@ project(dbc VERSION 0.5.0 DESCRIPTION "C++ DBC Parser")
 
 # -- PROJECT OPTIONS  -- #
 option(DBC_ENABLE_TESTS "Enable Unittests" ON)
-option(DBC_MODERN_CPP "Enable support for modern C++" OFF)
+option(DBC_MODERN_CPP "Enable support for modern C++ 17. Default is C++ 11 for legacy systems." OFF)
 option(DBC_TEST_LOCALE_INDEPENDENCE "Used to deterime if the libary is locale agnostic when it comes to converting floats. You need `de_DE.UTF-8` locale installed for this testing." OFF)
 option(DBC_GENERATE_DOCS "Use doxygen if installed to generated documentation files" OFF)
 option(DBC_GENERATE_SINGLE_HEADER "This will run the generator for the single header file version. Default is OFF since we make a static build. Requires cargo installed." OFF)
