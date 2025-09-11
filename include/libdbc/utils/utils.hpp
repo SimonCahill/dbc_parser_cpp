@@ -43,8 +43,6 @@ public:
  * @tparam T The typeparam; must be stringable.
  * @param value The string to trim.
  * @return A new string with the specified characters trimmed.
- * 
- * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
  */
 #if __cplusplus >= 201703
 #	if __cpp_concepts >= 201907
@@ -70,8 +68,6 @@ std::string		trim(const T& value) {
  * @param value The string to trim.
  * @param trimChars The characters to trim from the string.
  * @return A new string with the specified characters trimmed.
- * 
- * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
  */
 #if __cplusplus >= 201703
 #	if __cpp_concepts >= 201907
@@ -99,8 +95,6 @@ std::string  	trim(const T& value, const std::initializer_list<char>& trimChars)
  * 
  * @return true If the string is empty or consists only of whitespace.
  * @return false Otherwise.
- * 
- * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
  */
 template<typename T>
 constexpr bool  isWhitespaceOrEmpty(const T& str) {
@@ -113,8 +107,6 @@ constexpr bool  isWhitespaceOrEmpty(const T& str) {
  * @tparam T The type of the value.
  * @param value The value to swap.
  * @return T The value with swapped endianness.
- * 
- * @copyright 2025 Procyon Systems Inh. Simon Cahill (s.cahill@procyon-systems.de)
  */
 template<typename T>
 T                swapEndianness(T value) {
