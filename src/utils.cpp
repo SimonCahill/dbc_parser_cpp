@@ -16,17 +16,10 @@ std::istream& StreamHandler::get_line(std::istream& stream, std::string& line) {
 }
 
 std::istream& StreamHandler::get_next_non_blank_line(std::istream& stream, std::string& line) {
-
-	// NOTE:
-	// The test expects this function to return a blank string if it has reached the end.
-	// IMO this behaviour is incorrect and it should always return the last valid string.
-	//  - S. Cahill.
-
 	for (;;) {
         Utils::StreamHandler::get_line(stream, line);  // must strip trailing '\r'
 
         if (!stream) {                    // EOF or error after attempt to read
-            line.clear();                 // test expects "" at/after EOF; remove me if the behaviour is to be fixed.
             return stream;
         }
 
